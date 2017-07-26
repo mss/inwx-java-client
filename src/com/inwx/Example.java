@@ -23,7 +23,15 @@ public class Example {
 		String password = config.getProperty(Connector.class.getPackage().getName() + ".password");
 
 		String domain = args.length >= 2 ? args[1] : "inwx-meets-java.de";
-	
+
+		try {
+			File f = new File("./cert/cacerts");
+			String path = f.getAbsolutePath();
+			System.setProperty("javax.net.ssl.trustStore", path);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		System.out.println("conecting as " + username);
 		Connector connector = new Connector();
 		if(connector.login(username,password)) {

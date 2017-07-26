@@ -34,14 +34,6 @@ public class Connector {
 	}
 	
 	private void init() throws MalformedURLException {
-		try {
-			File f = new File("./cert/cacerts");
-			String path= f.getAbsolutePath();
-			System.setProperty("javax.net.ssl.trustStore",path);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
 		XmlRpcCommonsTransportFactory transport = new XmlRpcCommonsTransportFactory(client);
 		transport.setHttpClient(new HttpClient());
 		client.setTransportFactory(transport);
