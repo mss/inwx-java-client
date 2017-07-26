@@ -14,7 +14,7 @@ This project uses Maven to manage building and the dependencies.  Either import 
 
 Example
 -------
-This project includes ax example client implementation.  Just execute `com.inwx.Example.main()`.  For example: `java -cp "target/inwx-client.jar:target/dependency/*" com.inwx.Example`
+This project includes ax example client implementation.  Just execute `com.inwx.Example.main()`.  For example: `java -cp "target/inwx-client.jar:target/dependency/*" com.inwx.Example example.properties`
 
 License
 ----
