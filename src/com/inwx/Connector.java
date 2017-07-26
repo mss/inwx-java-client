@@ -3,9 +3,13 @@ package com.inwx;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 import com.inwx.model.ArrayElement;
 import com.inwx.model.Element;
@@ -30,7 +34,6 @@ public class Connector {
 	}
 	
 	private void init() throws MalformedURLException {
-		String version = "1.1";
 		try {
 			File f = new File("./cert/cacerts");
 			String path= f.getAbsolutePath();
@@ -46,9 +49,10 @@ public class Connector {
 		serverConfig.setServerURL(new URL(server));
 		serverConfig.setEncoding(XmlRpcClientConfigImpl.UTF8_ENCODING);
 		serverConfig.setConnectionTimeout(2000);
-		serverConfig.setUserAgent("DomRobot/"+version+" (Java " + System.getProperty("java.version") + ")");
+		serverConfig.setUserAgent(getUserAgent());
 		serverConfig.setEnabledForExtensions(true);
 	}
+
 	
 	public boolean logout() throws XmlRpcException {
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -137,4 +141,35 @@ public class Connector {
 		ArrayElement domains = (ArrayElement) resData.get("domains");
 		return domains;
 	}
+
+
+	private static String getUserAgent() {
+		return "DomRobot/" + getVersion() + " (Java " + System.getProperty("java.version") + ")";
+	}
+
+	private static String getVersion() {
+		String version = null;
+		try {
+			Enumeration<URL> manifests = Connector.class.getClassLoader().getResources("META-INF/MANIFEST.MF");
+			while (manifests.hasMoreElements()) {
+				try {
+					Attributes manifest = new Manifest(manifests.nextElement().openStream()).getMainAttributes();
+					if ("com.inwx.domrobot".equals(manifest.getValue("Implementation-Vendor-Id"))) {
+						version = manifest.getValue("Implementation-Version");
+						break;
+					}
+				} catch (Exception e) {
+					continue;
+				}
+			}
+		} catch (Exception e) {
+			// Ignore
+		}
+
+		if (version == null) {
+			version = "1.x";
+		}
+		return version;
+	}
+
 }
